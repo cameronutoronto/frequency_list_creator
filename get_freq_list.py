@@ -5,7 +5,7 @@ freq_dict = {}
 freq_dicts = []
 
 SPECIAL_CHARS = ['\'', '"', '.', '-', '!', '?', ';', ',', '.', '\n', \
-                 '«', '»', ':', '–', '—', ')', '(', ']', '[', '’', '`']
+                 '«', '»', ':', '–', '—', ')', '(', ']', '[', '’', '`', '…']
 INIT_CHARS = ['j', 'm', 'n', 's', 'd', 'l', 't']
 
 VERB_FIX = True
@@ -16,7 +16,7 @@ if VERB_FIX:
     with open("french_verbs.txt", 'r', encoding="utf-8") as f:
         for line in f:
             french_verbs_list.append(line[:-1])
-
+french_verbs_list = set(french_verbs_list)
 def fix_word(word):
     word = word.lower()
     if word == '':
@@ -48,13 +48,17 @@ def fix_word(word):
         word = ''
 
     if VERB_FIX:
-        if word in ["suis", "est", "es", "sommes", "êtes", "sont", "été", "serai"]:
+        if word in ["suis", "est", "es", "sommes", "êtes", "sont", "été"]:
             word = "être"
         elif word in ["étais", "était", "étions", "étiez", "étaient"]:
             word = "être"
+        elif word in ["serai", "seras", "sera", "serons", "serez", "seront"]:
+            word = "être"
         elif word in ["vais", "vas", "va", "allons", "allez", "vont", "allé", "irai"]:
             word = "aller"
-        elif word in ["ai", "as", "a", "avons", "avez", "ont", "eu", "aurai"]:
+        elif word in ["ai", "as", "a", "avons", "avez", "ont", "eu"]:
+            word = "avoir"
+        elif word in ["aurai", "auras", "aura", "aurons", "aurez", "auront"]:
             word = "avoir"
         elif word in ["dis", "dit", "disons", "dites", "disent", "dit"]:
             word = "dire"
@@ -108,13 +112,52 @@ def fix_word(word):
                 if tword in french_verbs_list:
                     word = tword
             if word[-1] == 's':
-                tword = word[-1] + "re"
+                tword = word[:-1] + "re"
                 if tword in french_verbs_list:
                     word = tword
             if word[-1] == 'u':
-                tword = word[-1] + "re"
+                tword = word[:-1] + "re"
                 if tword in french_verbs_list:
-                    word = tword   
+                    word = tword
+            if word[-1] == 'a':
+                tword = word[:-1] + "er"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-1] + "ir"
+                if tword in french_verbs_list:
+                    word = tword 
+                tword = word[:-1] + "re"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-1]
+                if tword in french_verbs_list:
+                    word = tword
+            if word[-2:] in ['as', "ai", "ez"]:
+                tword = word[:-2] + "er"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-2] + "ir"
+                if tword in french_verbs_list:
+                    word = tword 
+                tword = word[:-2] + "re"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-2]
+                if tword in french_verbs_list:
+                    word = tword
+            if word[-3:] in ['ons', "ont"]:
+                tword = word[:-3] + "er"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-3] + "ir"
+                if tword in french_verbs_list:
+                    word = tword 
+                tword = word[:-3] + "re"
+                if tword in french_verbs_list:
+                    word = tword
+                tword = word[:-3]
+                if tword in french_verbs_list:
+                    word = tword
             if word[-3:] in ["ais", "ait", "iez"]:
                 tword = word[:-3] + "er"
                 if tword in french_verbs_list:
